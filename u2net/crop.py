@@ -1,5 +1,6 @@
 import os
 from skimage import io, transform
+from skimage.filters import gaussian
 import torch
 import torchvision
 from torch.autograd import Variable
@@ -46,10 +47,10 @@ def pred2mask(pred):
 
 def applyMask(img, mask):
     resized_mask = transform.resize(mask, (img.shape[0], img.shape[1]))
+    resized_mask = gaussian(resized_mask)
     resized_mask = np.array(resized_mask, dtype=np.uint8)
 
     masked_img = img
-    masked_img[resized_mask==0] = 0
     masked_img = np.dstack([img, 255*resized_mask])
     masked_img = Image.fromarray(masked_img).convert('RGBA')
     return masked_img
@@ -72,7 +73,7 @@ def crop_img(filename, model):
     # --------- inference for image ---------
     for i_test, data_test in enumerate(test_salobj_dataloader):
 
-        print("inferencing:",filename)
+        #print("inferencing:",filename)
 
         inputs_test = data_test['image']
         inputs_test = inputs_test.type(torch.FloatTensor)
