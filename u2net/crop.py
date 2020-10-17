@@ -91,6 +91,7 @@ def crop_img(filename, model):
         masked_img = applyMask(orignal_img, mask)
         masked_img.save(f"img/out-{filename}.png")
 
+        del inputs_test
         del d1,d2,d3,d4,d5,d6,d7
         break
 
